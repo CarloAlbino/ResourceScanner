@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -44,9 +44,28 @@ public class Grid : MonoBehaviour {
                                                     (m_gridTile.transform.localScale.z + m_gridOffset) * h);
                     m_grid[h, w] = Instantiate(m_gridTile, position,
                                                 Quaternion.identity, transform) as GameObject;
+                    m_grid[h, w].GetComponent<Tile>().SetTileValues(h, w);
                 }
             }
         }
+    }
+
+    public void SetGridValues(int numOfFullTiles)
+    {
+        for (int i = 0; i < numOfFullTiles; i++)
+        {
+            int randRow;
+            int randCol;
+            do
+            {
+                randRow = Random.Range(0, m_grid.GetLength(0));
+                randCol = Random.Range(0, m_grid.GetLength(1));
+            } while (m_grid[randRow, randCol].GetComponent<Tile>().GetTileValue() < 0.5f);
+
+
+        }
+
+        
     }
 
     public Vector3 GetGridCenter()

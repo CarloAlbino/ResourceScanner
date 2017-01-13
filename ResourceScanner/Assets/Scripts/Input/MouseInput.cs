@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,24 +6,36 @@ public class MouseInput : MonoBehaviour {
 
     private RaycastHit m_hit;
     private Collider m_lastHitCollider;
+    private UIManager m_uiManager;
 
 	void Start ()
     {
-		
+        m_uiManager = FindObjectOfType<UIManager>();	
 	}
+
+    void Update()
+    {
+
+    }
 
 	void FixedUpdate ()
     {
+        Highlight();
+        Click();
+	}
+
+    private void Highlight()
+    {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
-		if(Physics.Raycast(ray, out m_hit))
+        if (Physics.Raycast(ray, out m_hit))
         {
-            if(m_lastHitCollider == null)
+            if (m_lastHitCollider == null)
             {
                 m_lastHitCollider = m_hit.collider;
             }
 
-            if(m_lastHitCollider != m_hit.collider)
+            if (m_lastHitCollider != m_hit.collider)
             {
                 // Unhighlight the previous tile
                 if (m_lastHitCollider.GetComponent<TileHighlighter>() != null)
@@ -35,12 +47,27 @@ public class MouseInput : MonoBehaviour {
                 m_lastHitCollider = m_hit.collider;
 
                 // Highligh the new collider that was hit
-                if(m_lastHitCollider.GetComponent<TileHighlighter>() != null)
+                if (m_lastHitCollider.GetComponent<TileHighlighter>() != null)
                 {
                     m_lastHitCollider.GetComponent<TileHighlighter>().HightLight();
                 }
             }
         }
-	}
+    }
+
+    private void Click()
+    {
+        if (m_hit.collider != null)
+        {
+            if (Input.GetMouseButtonDown(0) && m_hit.collider.GetComponent<Tile>())
+            {
+                if (m_hit.collider.GetComponent<Tile>())
+                {
+                    Tile t = m_hit.collider.GetComponent<Tile>();
+                    m_uiManager.UpdateMessage("You clicked on [" + t.GetRow() + ", " + t.GetColumn() + "]");
+                }
+            }
+        }
+    }
 
 }
