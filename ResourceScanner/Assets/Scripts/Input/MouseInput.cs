@@ -6,11 +6,10 @@ public class MouseInput : MonoBehaviour {
 
     private RaycastHit m_hit;
     private Collider m_lastHitCollider;
-    private UIManager m_uiManager;
 
 	void Start ()
     {
-        m_uiManager = FindObjectOfType<UIManager>();	
+        	
 	}
 
     void Update()
@@ -63,7 +62,7 @@ public class MouseInput : MonoBehaviour {
             if (Input.GetMouseButtonDown(0) && m_hit.collider.GetComponent<Tile>())
             {
                 Tile t = m_hit.collider.GetComponent<Tile>();
-                m_uiManager.UpdateMessage("You clicked on [" + t.GetRow() + ", " + t.GetColumn() + "]");
+                MessageBox.Instance.QueueUpMessage("You clicked on [" + t.GetRow() + ", " + t.GetColumn() + "]", Color.red);
                 m_hit.collider.GetComponent<TileHighlighter>().Click();
             }
         }

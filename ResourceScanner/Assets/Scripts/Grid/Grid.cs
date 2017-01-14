@@ -9,8 +9,7 @@ public class Grid : MonoBehaviour {
     private GameObject[,] m_grid;    // Change this later from GameObject to the tile class
 
     // For testing
-    public int m_width = 16;
-    public int m_height = 16;
+    public int m_side = 16;    // Should always be a square
     public bool m_createGrid = false;
     public float m_gridOffset = 0.1f;
 
@@ -24,20 +23,20 @@ public class Grid : MonoBehaviour {
         // For testing
 		if(m_createGrid)
         {
-            CreateGrid(m_width, m_height);
+            CreateGrid(m_side);
             Camera.main.transform.position = GetGridCenter();
             m_createGrid = false;
         }
 	}
 
-    public void CreateGrid(int width, int height)
+    public void CreateGrid(int side)
     {
         if(m_gridTile)  // Make sure there is a reference to a tile object
         {
-            m_grid = new GameObject[height, width];
-            for(int h = 0; h < height; h++)
+            m_grid = new GameObject[side, side];
+            for(int h = 0; h < side; h++)
             {
-                for(int w = 0; w < width; w++)
+                for(int w = 0; w < side; w++)
                 {
                     // Spawn and set each grid tile in the grid
                     Vector3 position = new Vector3((m_gridTile.transform.localScale.x + m_gridOffset) * w, 0,
@@ -61,11 +60,7 @@ public class Grid : MonoBehaviour {
                 randRow = Random.Range(0, m_grid.GetLength(0));
                 randCol = Random.Range(0, m_grid.GetLength(1));
             } while (m_grid[randRow, randCol].GetComponent<Tile>().GetTileValue() < 0.5f);
-
-
         }
-
-        
     }
 
     public Vector3 GetGridCenter()
@@ -77,25 +72,26 @@ public class Grid : MonoBehaviour {
 
         // Camera distance
         float y = Camera.main.transform.position.y;
-    
-        Vector3 center = new Vector3(x, y, z);
 
         // Set camera projection and size
         Camera.main.orthographic = true;
-        float gridHeight = Vector3.Distance(m_grid[0, 0].transform.position, m_grid[m_grid.GetLength(0) - 1, 0].transform.position);
-        float gridWidth = Vector3.Distance(m_grid[0, 0].transform.position, m_grid[0, m_grid.GetLength(1) - 1].transform.position);
+        Vector3 bottomPos = m_grid[0, 0].transform.position;
+        bottomPos.z -= (m_grid[0, 0].transform.localScale.z * 0.5f);
+        Vector3 topPos = m_grid[m_grid.GetLength(0) - 1, 0].transform.position;
+        topPos.z += (m_grid[m_grid.GetLength(0) - 1, 0].transform.localScale.z * 0.5f);
+        float gridHeight = Vector3.Distance(bottomPos, topPos);
 
-        // If the grid is taller than the width
-        if (gridHeight >= gridWidth)
-        {
-            // Orthorgraphic size is half the height of the grid + 20% of the grid height
-            Camera.main.orthographicSize = (gridHeight * 0.5f) + (gridHeight * 0.25f);
-        }
-        else
-        {
-            // Orthorgraphic size is 0.3% of the width
-            Camera.main.orthographicSize = (gridWidth * 0.3f);
-        }
+        // Orthorgraphic size is half the height of the grid + 5% of the grid height
+        // This will fill the screen verticaly with a bit of a border
+        Camera.main.orthographicSize = (gridHeight * 0.5f) + (gridHeight * 0.05f);
+
+        // Offset the camera so that grid is at the right of screen
+        float screenWidth = gridHeight * ((float)Screen.width / (float)Screen.height);
+        // Formula fits a square to the right of the screen || TODO: Only seems to work with 16:9 aspect ratio, fix this in the future
+        float newX = x - (screenWidth * ((((gridHeight * 0.5f) - ((screenWidth * 0.5f) - (screenWidth - gridHeight))))/screenWidth));
+
+        // Set centre
+        Vector3 center = new Vector3(newX, y, z);
 
         return center;
     }
