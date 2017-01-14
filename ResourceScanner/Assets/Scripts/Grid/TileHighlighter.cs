@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,6 +6,7 @@ public class TileHighlighter : MonoBehaviour {
 
     [SerializeField]
     private Color m_highlightColour = Color.blue;
+    private Color m_clickColour = Color.black;
     private Color m_originalColor = Color.white;
     private MeshRenderer m_meshRenderer = null;
 
@@ -34,5 +35,10 @@ public class TileHighlighter : MonoBehaviour {
     public void UnHighLight()
     {
         m_meshRenderer.material.color = m_originalColor;
+    }
+
+    public void Click()
+    {
+        m_meshRenderer.material.color = m_clickColour;
     }
 }

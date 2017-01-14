@@ -22,6 +22,7 @@ public class MouseInput : MonoBehaviour {
     {
         Highlight();
         Click();
+        UnClick();
 	}
 
     private void Highlight()
@@ -61,11 +62,20 @@ public class MouseInput : MonoBehaviour {
         {
             if (Input.GetMouseButtonDown(0) && m_hit.collider.GetComponent<Tile>())
             {
-                if (m_hit.collider.GetComponent<Tile>())
-                {
-                    Tile t = m_hit.collider.GetComponent<Tile>();
-                    m_uiManager.UpdateMessage("You clicked on [" + t.GetRow() + ", " + t.GetColumn() + "]");
-                }
+                Tile t = m_hit.collider.GetComponent<Tile>();
+                m_uiManager.UpdateMessage("You clicked on [" + t.GetRow() + ", " + t.GetColumn() + "]");
+                m_hit.collider.GetComponent<TileHighlighter>().Click();
+            }
+        }
+    }
+
+    private void UnClick()
+    {
+        if (m_hit.collider != null)
+        {
+            if (Input.GetMouseButtonUp(0) && m_hit.collider.GetComponent<TileHighlighter>())
+            {
+                m_hit.collider.GetComponent<TileHighlighter>().HightLight();
             }
         }
     }
