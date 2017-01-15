@@ -12,10 +12,11 @@ public class Grid : MonoBehaviour {
     public int m_side = 16;    // Should always be a square
     public bool m_createGrid = false;
     public float m_gridOffset = 0.1f;
+    public int m_numOfFUllTiles = 6;
 
 	void Start ()
     {
-		
+        m_numOfFUllTiles = Mathf.Clamp(m_numOfFUllTiles, 0, (m_side * m_side) / 2);
 	}
 	
 	void Update ()
@@ -25,9 +26,21 @@ public class Grid : MonoBehaviour {
         {
             CreateGrid(m_side);
             Camera.main.transform.position = GetGridCenter();
+            SetResources(m_numOfFUllTiles);
             m_createGrid = false;
         }
 	}
+
+    public void Scan()
+    {
+        for (int x = 0; x < m_grid.GetLength(0); x++)
+        {
+            for (int y = 0; y < m_grid.GetLength(1); y++)
+            {
+                m_grid[x, y].GetComponent<Tile>().Scan();
+            }
+        }
+    }
 
     public void CreateGrid(int side)
     {
@@ -43,23 +56,9 @@ public class Grid : MonoBehaviour {
                                                     (m_gridTile.transform.localScale.z + m_gridOffset) * h);
                     m_grid[h, w] = Instantiate(m_gridTile, position,
                                                 Quaternion.identity, transform) as GameObject;
-                    m_grid[h, w].GetComponent<Tile>().SetTileValues(h, w);
+                    m_grid[h, w].GetComponent<Tile>().SetPositionValues(h, w);
                 }
             }
-        }
-    }
-
-    public void SetGridValues(int numOfFullTiles)
-    {
-        for (int i = 0; i < numOfFullTiles; i++)
-        {
-            int randRow;
-            int randCol;
-            do
-            {
-                randRow = Random.Range(0, m_grid.GetLength(0));
-                randCol = Random.Range(0, m_grid.GetLength(1));
-            } while (m_grid[randRow, randCol].GetComponent<Tile>().GetTileValue() < 0.5f);
         }
     }
 
@@ -94,5 +93,75 @@ public class Grid : MonoBehaviour {
         Vector3 center = new Vector3(newX, y, z);
 
         return center;
+    }
+
+    private void SetResources(int numOfFullTiles)
+    {
+        for (int fullTiles = 0; fullTiles < numOfFullTiles; fullTiles++)
+        {
+            // For each full tile populate the tiles around it
+            int randX = 0;
+            int randY = 0;
+
+            do
+            {
+                randX = Random.Range(0, m_side);
+                randY = Random.Range(0, m_side);
+            } while (GetTile(randX, randY).GetTileValue() >= (1.0f / 2.0f));
+
+            // Fill tiles
+            for(int x = randX - 2; x < randX + 2 + 1; x++)
+            {
+                for(int y = randY - 2; y < randY + 2 + 1; y++)
+                {
+                    //Debug.Log("[" + x + ", " + y + "]");
+                    if(GetTile(x, y) != null)
+                    {
+                        // Set 1/4 resource
+                        if(y == randY - 2 || y == randY + 2 ||
+                           x == randX - 2 || x == randX + 2)
+                        {
+                            //Debug.Log("Hit 1/4");
+                            if(GetTile(x, y).GetTileValue() < 1.0f / 4.0f)
+                                GetTile(x, y).SetNewTileValue(1.0f / 4.0f);
+                        }
+                        // Set 1/2 resource
+                        else if(y == randY - 1 || y == randY + 1||
+                                x == randX - 1 || x == randX +1)
+                        {
+                            //Debug.Log("Hit 1/2");
+                            if (GetTile(x, y).GetTileValue() < 1.0f / 2.0f)
+                                GetTile(x, y).SetNewTileValue(1.0f / 2.0f);
+                        }
+                        // Set Full resource
+                        else if (x == randX && y == randY)
+                        {
+                            //Debug.Log("Hit Full");
+                            if (GetTile(x, y).GetTileValue() < 1.0f)
+                                GetTile(x, y).SetNewTileValue(1.0f);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private Tile GetTile(int x, int y)
+    {
+        if ((x > -1 && x < m_side) && (y > -1 && y < m_side))
+        {
+            if (m_grid[x, y] != null)
+            {
+                return m_grid[x, y].GetComponent<Tile>();
+            }
+            else
+            {
+                return null;
+            }
+        }
+        else
+        {
+            return null;
+        }
     }
 }
