@@ -42,6 +42,20 @@ public class Grid : MonoBehaviour {
         }
     }
 
+    public void ScanArea(int x, int y)
+    {
+        for (int _x = x - 2; _x < x + 2 + 1; _x++)
+        {
+            for (int _y = y - 2; _y < y + 2 + 1; _y++)
+            {
+                if (_x > -1 && _x < m_grid.GetLength(0) && _y > -1 && _y < m_grid.GetLength(1))
+                {
+                    m_grid[_x, _y].GetComponent<Tile>().Scan();
+                }
+            }
+        }
+    }
+
     public void CreateGrid(int side)
     {
         if(m_gridTile)  // Make sure there is a reference to a tile object

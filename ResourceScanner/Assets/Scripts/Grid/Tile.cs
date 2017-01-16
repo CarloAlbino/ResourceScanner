@@ -129,4 +129,18 @@ public class Tile : MonoBehaviour {
             m_meshRenderer.material.color = m_currentColour;
         }
     }
+
+    public Grid GetGrid()
+    {
+        if(GetComponentInParent<Grid>() != null)
+        {
+            return GetComponentInParent<Grid>();
+        }
+        else
+        {
+            Debug.LogWarning("No grid attached.");
+            return null;
+        }
+
+    }
 }
