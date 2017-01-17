@@ -108,19 +108,19 @@ public class Tile : MonoBehaviour {
             switch (m_currentLevel)
             {
                 case ResourceLevel.Empty:
-                    m_currentColour = m_emptyColour;
+                    m_currentColour = (m_normalColour + m_emptyColour) / 2.0f;
                     break;
                 case ResourceLevel.Low:
-                    m_currentColour = m_lowColour;
+                    m_currentColour = (m_normalColour + m_lowColour) / 2.0f;
                     break;
                 case ResourceLevel.Medium:
-                    m_currentColour = m_mediumColour;
+                    m_currentColour = (m_normalColour + m_mediumColour) / 2.0f;
                     break;
                 case ResourceLevel.High:
-                    m_currentColour = m_highColour;
+                    m_currentColour = (m_normalColour + m_highColour) / 2.0f;
                     break;
                 case ResourceLevel.Full:
-                    m_currentColour = m_fullColour;
+                    m_currentColour = m_fullColour;// (m_normalColour + m_fullColour) / 2.0f;
                     break;
                 default:
                     m_currentColour = m_normalColour;

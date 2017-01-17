@@ -62,7 +62,7 @@ public class MouseInput : MonoBehaviour {
             if (Input.GetMouseButtonDown(0) && m_hit.collider.GetComponent<Tile>())
             {
                 Tile t = m_hit.collider.GetComponent<Tile>();
-                MessageBox.Instance.QueueUpMessage("Scanning [" + t.GetRow() + ", " + t.GetColumn() + "] area", Color.red);
+                MessageBox.Instance.QueueUpMessage("Scanning [" + t.GetRow() + ", " + t.GetColumn() + "] area", new Color(0.64f, 0.22f, 0.22f, 1.0f));
                 m_hit.collider.GetComponent<TileHighlighter>().Click();
                 t.GetGrid().ScanArea(t.GetRow(), t.GetColumn());
             }
