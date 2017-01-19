@@ -56,6 +56,31 @@ public class Grid : MonoBehaviour {
         }
     }
 
+    public void ExtractFromArea(int x, int y)
+    {
+        GameController.Instance.UpdateScore(GetTile(x, y).GetTileValue());
+        // Extract tiles
+        for (int _x = x - 2; _x < x + 2 + 1; _x++)
+        {
+            for (int _y = y - 2; _y < y + 2 + 1; _y++)
+            {
+                if (GetTile(_x, _y) != null)
+                {
+                    // Extract Full resource
+                    if (_x == x && _y == y)
+                    {
+                        GetTile(_x, _y).SetNewTileValue(1.0f/16.0f);
+                    }
+                    else
+                    {
+                        GetTile(_x, _y).SetNewTileValue(GetTile(_x, _y).GetTileValue() / 2);
+                    }
+                }
+            }
+        }
+        ScanArea(x, y);
+    }
+
     public void CreateGrid(int side)
     {
         if(m_gridTile)  // Make sure there is a reference to a tile object

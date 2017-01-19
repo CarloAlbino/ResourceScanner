@@ -102,32 +102,29 @@ public class Tile : MonoBehaviour {
 
     public void Scan()
     {
-        if (!m_hasBeenScanned)
+        m_hasBeenScanned = true;
+        switch (m_currentLevel)
         {
-            m_hasBeenScanned = true;
-            switch (m_currentLevel)
-            {
-                case ResourceLevel.Empty:
-                    m_currentColour = (m_normalColour + m_emptyColour) / 2.0f;
-                    break;
-                case ResourceLevel.Low:
-                    m_currentColour = (m_normalColour + m_lowColour) / 2.0f;
-                    break;
-                case ResourceLevel.Medium:
-                    m_currentColour = (m_normalColour + m_mediumColour) / 2.0f;
-                    break;
-                case ResourceLevel.High:
-                    m_currentColour = (m_normalColour + m_highColour) / 2.0f;
-                    break;
-                case ResourceLevel.Full:
-                    m_currentColour = m_fullColour;// (m_normalColour + m_fullColour) / 2.0f;
-                    break;
-                default:
-                    m_currentColour = m_normalColour;
-                    break;
-            }
-            m_meshRenderer.material.color = m_currentColour;
+            case ResourceLevel.Empty:
+                m_currentColour = m_emptyColour;
+                break;
+            case ResourceLevel.Low:
+                m_currentColour = m_lowColour;
+                break;
+            case ResourceLevel.Medium:
+                m_currentColour = m_mediumColour;
+                break;
+            case ResourceLevel.High:
+                m_currentColour = m_highColour;
+                break;
+            case ResourceLevel.Full:
+                m_currentColour = m_fullColour;// (m_normalColour + m_fullColour) / 2.0f;
+                break;
+            default:
+                m_currentColour = m_normalColour;
+                break;
         }
+        m_meshRenderer.material.color = m_currentColour;
     }
 
     public Grid GetGrid()

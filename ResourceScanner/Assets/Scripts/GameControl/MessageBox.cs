@@ -45,13 +45,16 @@ public class MessageBox : Singleton<MessageBox> {
         }
     }
 
-    public void QueueUpMessage(string newMessage, Color messageColour)
+    public void QueueUpMessage(string newMessage, Color messageColour, bool displayTimeStamp = true)
     {
         if (newMessage != m_lastMessage || System.DateTime.Now.ToString() != m_lastTimeStamp)
         {
             // Set date/time, message, and colour
             Message message = new Message();
-            message.m_timeStamp = "[" + System.DateTime.Now + "] ";
+            if(displayTimeStamp)
+                message.m_timeStamp = "[" + System.DateTime.Now + "] ";
+            else
+                message.m_timeStamp = "";
             message.m_text = newMessage;
             message.m_colour = messageColour;
 
