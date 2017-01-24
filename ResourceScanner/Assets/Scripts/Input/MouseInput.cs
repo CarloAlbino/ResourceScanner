@@ -91,6 +91,7 @@ public class MouseInput : MonoBehaviour {
                     {
                         if (!t.IsScanned())
                         {
+                            AudioManager.Instance.Scan();
                             MessageBox.Instance.QueueUpMessage("Scanning [" + t.GetRow() + ", " + t.GetColumn() + "] area", m_scanTextColor);
                             // Scan
                             t.GetGrid().ScanArea(t.GetRow(), t.GetColumn());
@@ -104,6 +105,7 @@ public class MouseInput : MonoBehaviour {
                     {
                         if (m_gameController.ExtractsRemaining() > 0)
                         {
+                            AudioManager.Instance.Extract();
                             MessageBox.Instance.QueueUpMessage("Extracted " + (t.GetTileValue() * 1000) + "kg of element X", m_extractTextColor, false);
                             MessageBox.Instance.QueueUpMessage("Extracting [" + t.GetRow() + ", " + t.GetColumn() + "]", m_extractTextColor);
                             // Extract
