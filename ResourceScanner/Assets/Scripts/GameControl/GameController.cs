@@ -32,7 +32,7 @@ public class GameController : Singleton<GameController> {
     void Start()
     {
         // For testing
-        StartGame(m_maxScans, m_maxExtracts, 16, 8);
+        //StartGame(m_maxScans, m_maxExtracts, 16, 8);
     }
 
     /// <summary>
