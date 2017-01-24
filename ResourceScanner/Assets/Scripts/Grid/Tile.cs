@@ -38,6 +38,7 @@ public class Tile : MonoBehaviour {
     private float m_value = 1.0f / 8.0f;
     private ResourceLevel m_currentLevel = ResourceLevel.Low;
     private bool m_hasBeenScanned = false;
+    private bool m_hasBeenExtracted = false;
 
     // Reference to the renderer and colour
     private MeshRenderer m_meshRenderer;
@@ -203,6 +204,16 @@ public class Tile : MonoBehaviour {
                 break;
         }
         m_meshRenderer.material.color = m_currentColour;
+    }
+
+    public bool IsExtracted()
+    {
+        return m_hasBeenExtracted;
+    }
+
+    public void Extract()
+    {
+        m_hasBeenExtracted = true;
     }
 
     /// <summary>

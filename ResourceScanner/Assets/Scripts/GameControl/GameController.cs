@@ -44,9 +44,11 @@ public class GameController : Singleton<GameController> {
     {
         // Create and populate grid
         Grid grid = Instantiate(m_grid, Vector3.zero, Quaternion.identity) as Grid;
-        grid.CreateGrid(gridLength);
+        grid.CreateGrid(Mathf.Clamp(gridLength, 0, 128));
         int fullTiles = numFullTiles;
-        fullTiles = Mathf.Clamp(fullTiles, 0, (gridLength * gridLength) / 2);
+        if (fullTiles > (gridLength * gridLength) / 4)
+            fullTiles = (gridLength * gridLength) / 4;
+        //fullTiles = Mathf.Clamp(fullTiles, 0, (gridLength * gridLength) / 2);
         grid.SetResources(fullTiles);
 
         // Start on scan mode
@@ -112,7 +114,7 @@ public class GameController : Singleton<GameController> {
         if (m_scansRemaining <= 0)
         {
             MessageBox.Instance.QueueUpMessage("No more scans remaining - switching to extract mode", Color.green);
-            ToggleExtractMode();
+            //ToggleExtractMode();
         }
         else
         {

@@ -15,27 +15,27 @@ public class MainMenuManager : MonoBehaviour {
     public void StartGame()
     {
         int rows;
-        int.TryParse(m_textRows.text, out rows);
+        //int.TryParse(m_textRows.text, out rows);
         int fullTiles;
-        int.TryParse(m_textRows.text, out fullTiles);
+        //int.TryParse(m_textRows.text, out fullTiles);
         int scans;
-        int.TryParse(m_textRows.text, out scans);
+        //int.TryParse(m_textRows.text, out scans);
         int extracts;
-        int.TryParse(m_textRows.text, out extracts);
+        //int.TryParse(m_textRows.text, out extracts);
 
         if (int.TryParse(m_textRows.text, out rows) == false)
         {
             int.TryParse(m_placeholderRows.text, out rows);
         }
-        if (int.TryParse(m_textRows.text, out fullTiles) == false)
+        if (int.TryParse(m_textFull.text, out fullTiles) == false)
         {
             int.TryParse(m_placeholderFull.text, out fullTiles);
         }
-        if (int.TryParse(m_textRows.text, out scans) == false)
+        if (int.TryParse(m_textScans.text, out scans) == false)
         {
             int.TryParse(m_placeholderScans.text, out scans);
         }
-        if (int.TryParse(m_textRows.text, out extracts) == false)
+        if (int.TryParse(m_textExtracts.text, out extracts) == false)
         {
             int.TryParse(m_placeholderExtracts.text, out extracts);
         }

@@ -101,18 +101,22 @@ public class MouseInput : MonoBehaviour {
                 }
                 else
                 {
-                    if (t.CanBeClicked())
-                    {
+                    //if (t.CanBeClicked())
+                    //{
                         if (m_gameController.ExtractsRemaining() > 0)
                         {
-                            AudioManager.Instance.Extract();
-                            MessageBox.Instance.QueueUpMessage("Extracted " + (t.GetTileValue() * 1000) + "kg of element X", m_extractTextColor, false);
-                            MessageBox.Instance.QueueUpMessage("Extracting [" + t.GetRow() + ", " + t.GetColumn() + "]", m_extractTextColor);
-                            // Extract
-                            t.GetGrid().ExtractFromArea(t.GetRow(), t.GetColumn());
-                            m_gameController.Extract();
+                            if (!t.IsExtracted())
+                            {
+                                AudioManager.Instance.Extract();
+                                MessageBox.Instance.QueueUpMessage("Extracted " + (t.GetTileValue() * 1000) + "kg of element X", m_extractTextColor, false);
+                                MessageBox.Instance.QueueUpMessage("Extracting [" + t.GetRow() + ", " + t.GetColumn() + "]", m_extractTextColor);
+                                // Extract
+                                t.GetGrid().ExtractFromArea(t.GetRow(), t.GetColumn());
+                                t.Extract();
+                                m_gameController.Extract();
+                            }
                         }
-                    }
+                    //}
                 }
 
                 m_hit.collider.GetComponent<TileHighlighter>().Click();
