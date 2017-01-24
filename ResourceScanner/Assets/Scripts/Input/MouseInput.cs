@@ -15,21 +15,28 @@ public class MouseInput : MonoBehaviour {
     private Collider m_lastHitCollider;
     // Reference to the game controller
     private GameController m_gameController;
+    // Reference to the pause manager
+    private PauseMenuManager m_pauseManager;
 
 	void Start ()
     {
         // Get reference to the game controller
         m_gameController = GameController.Instance;
+        // Get reference to the pause menu manager
+        m_pauseManager = FindObjectOfType<PauseMenuManager>();
 	}
 
 	void FixedUpdate ()
     {
-        // Raycast in Higlight()
-        Highlight();
-        // Check for a click in Click()
-        Click();
-        // Unclick if necessary
-        UnClick();
+        if (!m_pauseManager.IsGamePaused())
+        {
+            // Raycast in Higlight()
+            Highlight();
+            // Check for a click in Click()
+            Click();
+            // Unclick if necessary
+            UnClick();
+        }
 	}
 
     /// <summary>

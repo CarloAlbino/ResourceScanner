@@ -43,4 +43,9 @@ public class MainMenuManager : MonoBehaviour {
         GameController.Instance.StartGame(scans, extracts, rows, fullTiles);
         m_panel.SetActive(false);
     }
+
+    public void QuitApplication()
+    {
+        Application.Quit();
+    }
 }
