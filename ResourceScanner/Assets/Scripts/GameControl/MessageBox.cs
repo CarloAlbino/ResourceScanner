@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class MessageBox : Singleton<MessageBox> {
 
+    // Holds the information for messages
     public struct Message
     {
         public string m_timeStamp;
@@ -12,14 +13,16 @@ public class MessageBox : Singleton<MessageBox> {
         public Color m_colour;
     }
 
-    [SerializeField]
+    [SerializeField, Tooltip("The amount of message slots")]
     private int m_maxMessages = 5;
-    [SerializeField]
+    [SerializeField, Tooltip("References to the Text objects for the time stamps")]
     private Text[] m_timeStamps;
-    [SerializeField]
+    [SerializeField, Tooltip("References to the Text objects for the messages")]
     private Text[] m_messageBoxes;
 
+    // Queue of all the messages to display
     private Queue<Message> m_messageQueue = new Queue<Message>();
+    // Store the previous message
     private string m_lastMessage = "";
     private string m_lastTimeStamp = "";
 
@@ -45,6 +48,12 @@ public class MessageBox : Singleton<MessageBox> {
         }
     }
 
+    /// <summary>
+    /// Add a new message to the message queue to display in the message box
+    /// </summary>
+    /// <param name="newMessage">The message</param>
+    /// <param name="messageColour">The colour to display the message</param>
+    /// <param name="displayTimeStamp">The time stamp of the message</param>
     public void QueueUpMessage(string newMessage, Color messageColour, bool displayTimeStamp = true)
     {
         if (newMessage != m_lastMessage || System.DateTime.Now.ToString() != m_lastTimeStamp)

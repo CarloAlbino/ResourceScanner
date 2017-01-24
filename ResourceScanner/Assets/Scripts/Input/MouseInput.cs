@@ -4,26 +4,37 @@ using UnityEngine;
 
 public class MouseInput : MonoBehaviour {
 
-    [SerializeField]
+    [SerializeField, Tooltip("Colour of the scanned message")]
     private Color m_scanTextColor = new Color(0.64f, 0.22f, 0.22f, 1.0f);
-    [SerializeField]
+    [SerializeField, Tooltip("Colour of the extracted message")]
     private Color m_extractTextColor = new Color(0.64f, 0.22f, 0.22f, 1.0f);
+
+    // Holds info on the object hit by the raycast
     private RaycastHit m_hit;
+    // The previously hit collider
     private Collider m_lastHitCollider;
+    // Reference to the game controller
     private GameController m_gameController;
 
 	void Start ()
     {
+        // Get reference to the game controller
         m_gameController = GameController.Instance;
 	}
 
 	void FixedUpdate ()
     {
+        // Raycast in Higlight()
         Highlight();
+        // Check for a click in Click()
         Click();
+        // Unclick if necessary
         UnClick();
 	}
 
+    /// <summary>
+    /// Highlight tile if mouse is over tile 
+    /// </summary>
     private void Highlight()
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -55,32 +66,43 @@ public class MouseInput : MonoBehaviour {
         }
     }
 
+    /// <summary>
+    /// Click the tile, scan if in scan mode, extract if in extract mode
+    /// </summary>
     private void Click()
     {
         if (m_hit.collider != null)
         {
             if (Input.GetMouseButtonDown(0) && m_hit.collider.GetComponent<Tile>())
             {
+                // Store the tile clicked on
                 Tile t = m_hit.collider.GetComponent<Tile>();
 
                 if (m_gameController.IsScanMode())
                 {
                     if (m_gameController.ScansRemaining() > 0)
                     {
-                        MessageBox.Instance.QueueUpMessage("Scanning [" + t.GetRow() + ", " + t.GetColumn() + "] area", m_scanTextColor);
-                        t.GetGrid().ScanArea(t.GetRow(), t.GetColumn());
-                        m_gameController.Scan();
+                        if (!t.IsScanned())
+                        {
+                            MessageBox.Instance.QueueUpMessage("Scanning [" + t.GetRow() + ", " + t.GetColumn() + "] area", m_scanTextColor);
+                            // Scan
+                            t.GetGrid().ScanArea(t.GetRow(), t.GetColumn());
+                            m_gameController.Scan();
+                        }
                     }
                 }
                 else
                 {
-                    if (m_gameController.ExtractsRemaining() > 0)
+                    if (t.CanBeClicked())
                     {
-                        MessageBox.Instance.QueueUpMessage("Extracted " + (t.GetTileValue() * 1000) + "kg of element X", m_extractTextColor, false);
-                        MessageBox.Instance.QueueUpMessage("Extracting [" + t.GetRow() + ", " + t.GetColumn() + "]", m_extractTextColor);
-                        // Extract
-                        t.GetGrid().ExtractFromArea(t.GetRow(), t.GetColumn());
-                        m_gameController.Extract();
+                        if (m_gameController.ExtractsRemaining() > 0)
+                        {
+                            MessageBox.Instance.QueueUpMessage("Extracted " + (t.GetTileValue() * 1000) + "kg of element X", m_extractTextColor, false);
+                            MessageBox.Instance.QueueUpMessage("Extracting [" + t.GetRow() + ", " + t.GetColumn() + "]", m_extractTextColor);
+                            // Extract
+                            t.GetGrid().ExtractFromArea(t.GetRow(), t.GetColumn());
+                            m_gameController.Extract();
+                        }
                     }
                 }
 
@@ -89,6 +111,9 @@ public class MouseInput : MonoBehaviour {
         }
     }
 
+    /// <summary>
+    /// Return the tile to regular highlight
+    /// </summary>
     private void UnClick()
     {
         if (m_hit.collider != null)
