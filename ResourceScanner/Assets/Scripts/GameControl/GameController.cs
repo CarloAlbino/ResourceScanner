@@ -44,10 +44,10 @@ public class GameController : Singleton<GameController> {
     {
         // Create and populate grid
         Grid grid = Instantiate(m_grid, Vector3.zero, Quaternion.identity) as Grid;
-        grid.CreateGrid(Mathf.Clamp(gridLength, 0, 128));
-        int fullTiles = numFullTiles;
-        if (fullTiles > (gridLength * gridLength) / 4)
-            fullTiles = (gridLength * gridLength) / 4;
+        grid.CreateGrid(Mathf.Clamp(Mathf.Abs(gridLength), 0, 128));
+        int fullTiles = Mathf.Abs(numFullTiles);
+        if (fullTiles > (Mathf.Abs(gridLength * gridLength)) / 4)
+            fullTiles = (Mathf.Abs(gridLength * gridLength)) / 4;
         //fullTiles = Mathf.Clamp(fullTiles, 0, (gridLength * gridLength) / 2);
         grid.SetResources(fullTiles);
 
@@ -59,8 +59,8 @@ public class GameController : Singleton<GameController> {
         UpdateScore(0);
 
         // Set defaults
-        m_maxScans = maxScans;
-        m_maxExtracts = maxExtracts;
+        m_maxScans = Mathf.Abs(maxScans);
+        m_maxExtracts = Mathf.Abs(maxExtracts);
         m_scansRemaining = m_maxScans;
         m_extractsRemaining = m_maxExtracts;
 
@@ -113,7 +113,7 @@ public class GameController : Singleton<GameController> {
         m_scansRemaining--;
         if (m_scansRemaining <= 0)
         {
-            MessageBox.Instance.QueueUpMessage("No more scans remaining - switching to extract mode", Color.green);
+            MessageBox.Instance.QueueUpMessage("No more scans remaining - Please switch to extract mode", Color.green);
             //ToggleExtractMode();
         }
         else
